@@ -7,10 +7,6 @@ window.onload = async () => {
     const authed = await authCheck();
     if (!authed) return;
 
-    sendCommand("GET_PLAYLISTS");
-    sendCommand("GET_AMBIENCE");
-    sendCommand("GET_PLAYBACK_STATE");
-
     // Main controls
     document.getElementById("musicPlayPause").onclick = () => togglePlayback("music");
     document.getElementById("ambiencePlayPause").onclick = () => togglePlayback("ambience");
@@ -51,6 +47,12 @@ window.onPlaybackStateUpdated = (ps) => {
     updateNowPlaying("music", ps.music.playlist_name, ps.music.track_name);
     updateNowPlaying("ambience", "Ambience", ps.ambience.name);
     updateVCButtons();
+}
+
+window.onWebSocketConnected = () => {
+    sendCommand("GET_PLAYLISTS");
+    sendCommand("GET_AMBIENCE");
+    sendCommand("GET_PLAYBACK_STATE");
 }
 
 // ====== UI Setup ======
