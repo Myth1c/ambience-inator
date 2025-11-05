@@ -25,12 +25,6 @@ let playbackState = {
 
 // === Auth helper ===
 async function authCheck() {
-    
-    if (!key) {
-        console.warn("[WEB] No auth key, redirecting...");
-        window.location.href = "./auth.html";
-        return false;
-    }
 
     try {
         const res = await fetch(`${API_BASE}/auth_check`, {
