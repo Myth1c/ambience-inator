@@ -44,7 +44,7 @@ window.onload = async () => {
 };
 
 window.onReturnPlaybackState = (ps) => {
-    updateNowPlaying("music", ps.music.playlist_name, ps.music.track_name);
+    updateNowPlaying("music", ps.get("music").playlist_name, ps.get("music").track_name);
     updateNowPlaying("ambience", "Ambience", ps.ambience.name);
     updateVCButtons();
 }
