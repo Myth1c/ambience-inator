@@ -217,11 +217,18 @@ function saveChanges() {
             name: currentPlaylist,
             data: playlists[currentPlaylist]            
         })
+        console.log(JSON.stringify({
+            name: currentPlaylist,
+            data: playlists[currentPlaylist]            
+        }))
         showStatus(`Saving "${currentPlaylist}"...`, "success", document.getElementById("statusMessage"))
     }else{
         sendCommand("SAVE_AMBIENCE", {
             data: playlists["Ambience"]          
         })
+        console.log(JSON.stringify({
+            data: playlists["Ambience"]          
+        }))
         showStatus("Saving Ambience...", "success", document.getElementById("statusMessage"))
     }
     
