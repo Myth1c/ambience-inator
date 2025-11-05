@@ -1,29 +1,52 @@
-let ws;
+// ===== edit.js =====
+
 let currentPlaylist = null;
 let playlists = {};
 let selectedSongUrl = null;
 let editMode = "music";
 
-window.onload = () => {
-    //ws = new WebSocket(`wss://localhost:8080/ws`);  // if local dev
-    ws = new WebSocket(`wss://ambienceinator-web.onrender.com/ws`) // (if hosted backend)
+window.onload = async () => {
+    const authed = await authCheck();
+    if (!authed) return;
 
-    ws.onopen = () => {
-        console.log("[Playlist] WS Connected");
-        sendCommand("GET_PLAYLISTS")
-    };
+    connectWebSocket((data) => handleMessage(data));  // handled by shared.js
+    console.log("[Playlist] WS Connected");
 
-    ws.onmessage = (msg) => handleMessage(msg);
-    
+    // Initial request for playlists
+    sendCommand("GET_PLAYLISTS");
+
     // Mode Toggle Buttons
     document.getElementById("musicModeBtn").onclick = () => switchMode("music");
     document.getElementById("ambienceModeBtn").onclick = () => switchMode("ambience");
-    
-    // 
+
     document.getElementById("newPlaylistBtn").onclick = createNewPlaylist;
     document.getElementById("addSongBtn").onclick = addSong;
     document.getElementById("removeSongBtn").onclick = removeSong;
     document.getElementById("saveBtn").onclick = saveChanges;
+};
+
+window.onPlaylistData = (playlistData) => {
+    playlists = playlistData;
+    populatePlaylistSelect();
+    showStatus("Playlists loaded.", "success", document.getElementById("statusMessage"))
+}
+
+window.onAmbienceData = (ambienceData) => {
+    playlists = { Ambience: ambienceData};
+    currentPlaylist = "Ambience";
+    
+    const select = document.getElementById("playlistSelect");
+    select.value = "Ambience";
+    select.disabled = true;
+    
+    document.getElementById("newPlaylistBtn").disabled = true;
+    
+    loadPlaylist("Ambience");
+    showStatus("Ambience loaded.", "success", document.getElementById("statusMessage"))
+}
+
+window.onPlaylistSaved = (playlistName) => {
+    showStatus(`Saved playlist: ${playlistName}`, "success", document.getElementById("statusMessage"));
 };
 
 function switchMode(mode) {
@@ -69,43 +92,6 @@ function switchMode(mode) {
         titleEl.textContent = "Ambience Tracks";
         sendCommand("GET_AMBIENCE")
     }
-}
-
-
-function handleMessage(msg) {
-    const data = JSON.parse(msg.data);
-    console.log("[Playlist] Received:", data);
-
-    if (data.command === "PLAYLISTS_DATA") {
-        console.log("[Playlist] Loading playlists:", Object.keys(data.playlists));
-        playlists = data.playlists;
-        populatePlaylistSelect();
-    }
-    
-    if (data.command === "AMBIENCE_DATA") {
-        // Treat ambience as a single playlist
-        playlists = { Ambience: data.ambience };
-        currentPlaylist = "Ambience";
-
-        // Ensure the dropdown updates and disables
-        const select = document.getElementById("playlistSelect");
-        select.value = "Ambience";
-        select.disabled = true;
-        document.getElementById("newPlaylistBtn").disabled = true;
-        
-        // Now actually load it into the panel
-        loadPlaylist("Ambience");
-        showStatus("Ambience loaded.", "success");
-    }
-    
-    if (data.command === "PLAYLIST_SAVED") {
-        showStatus(`Saved playlist: ${data.name}`, "success");
-    }
-    
-    if (data.command === "AMBIENCE_SAVED") {
-        showStatus(`Saved ambience with (${data.count} entries)`, "success");
-    }
-    
 }
 
 function populatePlaylistSelect() {
@@ -220,40 +206,20 @@ function removeSong() {
 function saveChanges() {
     if(editMode === "music"){
         if (!currentPlaylist){
-            showStatus("Select a playlist first.", "warning");
+            showStatus("Select a playlist first.", "warning", document.getElementById("statusMessage"));
             return;
         }
         sendCommand("SAVE_PLAYLIST", {
             name: currentPlaylist,
             data: playlists[currentPlaylist]            
         })
-        showStatus(`Saving "${currentPlaylist}"...`, "success")
+        showStatus(`Saving "${currentPlaylist}"...`, "success", document.getElementById("statusMessage"))
     }else{
         sendCommand("SAVE_AMBIENCE", {
             data: playlists["Ambience"]          
         })
-        showStatus("Saving Ambience...", "success")
+        showStatus("Saving Ambience...", "success", document.getElementById("statusMessage"))
     }
-    
-}
-
-function showStatus(message, type = "success"){
-    const el = document.getElementById("statusMessage");
-    el.textContent = message;
-    
-    // Reset classes
-    el.className = "status-message";
-    if (type === "success") el.classList.add("status-success");
-    if (type === "warning") el.classList.add("status-warning");
-    if (type === "error") el.classList.add("status-error");
-    
-    // Fade in
-    el.classList.add("show");
-    
-    // Automatically fade out after 2.5s
-    setTimeout(() => {
-        el.classList.remove("show");
-    }, 2500);
     
 }
 
@@ -267,12 +233,3 @@ document.addEventListener("click", (e) => {
         clearSelection();
     }
 });
-
-// ====== WebSocket Command Sender ======
-function sendCommand(command, data = {}) {
-    if (ws && ws.readyState === WebSocket.OPEN) {
-        ws.send(JSON.stringify({ command, ...data }));
-    } else {
-        console.warn("[Playback] WS not connected");
-    }
-}

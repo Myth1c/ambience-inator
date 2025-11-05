@@ -1,55 +1,23 @@
+// ===== index.js =====
+
 let ws;
-let botConnectionState = null;
 window._botCheckTimer = null;
 
-let playbackState = {
-    music: { 
-        playlist_name: "None",
-        track_name: "None",
-        playing: false, 
-        volume: 100, 
-        shuffle: false, 
-        loop: false 
-    },
-    ambience: { 
-        name: "None",
-        playing: false, 
-        volume: 25 
-    },
-    in_vc: false
-};
 
-window.onload = () => {
-    //ws = new WebSocket(`wss://localhost:8080/ws`);  // if local dev
-    ws = new WebSocket(`wss://ambienceinator-web.onrender.com/ws`) // (if hosted backend)
+window.onload = async () => {
     
-    ws.onmessage = msg => {
-        const data = JSON.parse(msg.data);
-
-        switch (data.command) {
-            case "BOT_STATUS":
-                updateBotStatus(data.online);
-                break;
-            case "PLAYBACK_STATE":
-                const stateData = Array.isArray(data.state) ? data.state[0] : data.state;
-                updateBotPlayingStatus(stateData);
-                break;
-        }
-    };
+    // Ensure user is authenticated
+    const authed = await authCheck();
+    if(!authed) return;
+        
+    console.log("[WEB] Connected to index");
     
-    
-    ws.onopen = () => {
-        console.log("[WS] Connected to Index");
-        sendCommand("GET_BOT_STATUS");
-        sendCommand("GET_PLAYBACK_STATE");
-    };
-    
-    
-    // === Bot Startup Buttons ===
+    // === Button references ===
     const startBtn = document.getElementById("startBotBtn");
     const stopBtn = document.getElementById("stopBotBtn");
     const rebootBtn = document.getElementById("rebootBotBtn");
     
+    // === Button Actions
     rebootBtn.onclick = () => {
         console.log("[WEB] Sending REBOOT to bot");
         sendCommand("REBOOT");
@@ -60,26 +28,14 @@ window.onload = () => {
     };
     stopBtn.onclick = () => {
         console.log("[WEB] Sending STOP_BOT");
-        sendCommand("LEAVEVC");
         sendCommand("STOP_BOT");
-        playbackState = {
-            music: { 
-                playlist_name: "None",
-                track_name: "None",
-                playing: false, 
-                volume: 100, 
-                shuffle: false, 
-                loop: false 
-            },
-            ambience: { 
-                name: "None",
-                playing: false, 
-                volume: 25 
-            },
-            in_vc: false
-        };
     };
+    
+    // Initial status request
+    sendCommand("GET_BOT_STATUS");
 };
+
+window.onBotStatusUpdate = (online) => { updateBotStatus(online); } 
 
 // ===== Helpers =====
 function updateBotStatus(online) {
@@ -133,62 +89,4 @@ function updateBotStatus(online) {
     document.getElementById("startBotBtn").disabled = btnBool;
     document.getElementById("stopBotBtn").disabled = !btnBool;
     document.getElementById("rebootBotBtn").disabled = !btnBool;
-}
-function updateBotPlayingStatus(data){
-    const el = document.getElementById("statusMessage");
-    if (!data) return;
-    
-    newData = data.music;
-    oldData = playbackState.music;
-    // Merge new state to keep structure consistent
-    playbackState.music = {
-        playlist_name: newData.playlist_name ?? oldData.playlist_name,
-        track_name: newData.track_name ?? oldData.track_name,
-        playing: newData.playing ?? oldData.playing,
-        volume: newData.volume ?? oldData.volume,
-        shuffle: newData.shuffle ?? oldData.shuffle,
-        loop: newData.loop ?? oldData.loop
-    };
-
-    
-    newData = data.ambience;
-    oldData = playbackState.ambience;
-    playbackState.ambience = {
-        ...playbackState.ambience,
-        name: newData.name ?? oldData.name,
-        playing: newData.playing ?? oldData.ambience.playing,
-        volume: newData.volume ?? oldData.volume
-    };
-    
-    
-    newStatusMessage = el.textContent;
-    
-    nowPlayingStatus = "";
-    
-    if (playbackState.music.playlist_name !== "None" && playbackState.music.track_name !== "None" && playbackState.music.playing){
-        nowPlayingStatus += `\n\nCurrent Playlist: ${playbackState.music.playlist_name}\n\nCurrent Track: ${playbackState.music.track_name}`;
-    }else{
-        nowPlayingStatus += "";
-    }
-    
-    if (playbackState.ambience.name !== "None" && playbackState.ambience.playing){
-        nowPlayingStatus += `\n\nCurrent Ambience: ${playbackState.ambience.name}`;
-    }else{
-        nowPlayingStatus += "";
-    }
-    
-    newStatusMessage += nowPlayingStatus;
-    
-    el.textContent = newStatusMessage
-    
-    
-}
-
-// ====== WebSocket Command Sender ======
-function sendCommand(command, data = {}) {
-    if (ws && ws.readyState === WebSocket.OPEN) {
-        ws.send(JSON.stringify({ command, ...data }));
-    } else {
-        console.warn("[Index] WS not connected");
-    }
 }
