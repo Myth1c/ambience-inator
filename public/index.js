@@ -184,10 +184,6 @@ function updateBotPlayingStatus(data){
     
 }
 
-function changePage(loc) {
-    window.location.href = `${window.location.origin}/ambience-inator/${loc}`;
-}
-
 // ====== WebSocket Command Sender ======
 function sendCommand(command, data = {}) {
     if (ws && ws.readyState === WebSocket.OPEN) {
