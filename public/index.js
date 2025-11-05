@@ -31,53 +31,73 @@ window.onload = async () => {
 
 window.onHeartbeatUpdate = (webOK, botOK) => { updateBotStatus(webOK, botOK) };
 
+window.onReturnStatus = (statusValue) => { 
+    // Normalize to boolean
+    
+    const webOK = true; // If we're getting responses from the bot, the webserver is online
+    
+    updateBotStatus(webOK, statusValue);
+};
+
 window.onWebSocketConnected = () => {
     sendCommand("GET_BOT_STATUS");
 }
 
 // ===== Helpers =====
-function updateBotStatus(webOK, botOK) {
+function updateBotStatus(webOK, botStatus) {
     const webEl = document.getElementById("web-status");
     const botEl = document.getElementById("bot-status");
-    
+
     const startBtn = document.getElementById("startBotBtn");
     const stopBtn = document.getElementById("stopBotBtn");
     const rebootBtn = document.getElementById("rebootBotBtn");
     
-    // Default to disabled if anything is down
-    let btnBool = false;
+    // --- Normalize Inputs ---
+    // Convert boolean to string for consistency
+    if (botStatus === true) botStatus = "online";
+    else if (botStatus === false) botStatus = "offline";
+    else if (typeof botStatus !== "string") botStatus = "offline";
     
-    // --- Web Server Status ---
-    if (webEl){
-        if (webOK){
+    // Default fallback
+    if (!botStatus) botStatus = "offline";
+
+    // ---- Web Server ----
+    if (webEl) {
+        if (webOK) {
             webEl.textContent = "Webserver Online";
             webEl.style.color = "#4caf50";
-        }else{
-            webEl.textContent = "Unable to reach WebServer";
+        } else {
+            webEl.textContent = "Webserver Offline";
             webEl.style.color = "#f44336";
         }
     }
-    
-    // ---- Bot Status ----
+
+    // ---- Bot ----
     if (botEl) {
-        if (botOK) {
-            botEl.textContent = "Bot Online";
-            botEl.style.color = "#4caf50";
-            btnBool = true;
-        } else if (webOK && !botOK) {
-            botEl.textContent = "Bot Disconnected";
-            botEl.style.color = "#f44336";
-        } else {
-            botEl.textContent = "Unable to reach Ambience-inator Bot";
-            botEl.style.color = "#ffca28";
+        switch (botStatus) {
+            case "online":
+                botEl.textContent = "Bot Online";
+                botEl.style.color = "#4caf50";
+                break;
+            case "booting":
+                botEl.textContent = "Bot Starting...";
+                botEl.style.color = "#ffca28";
+                break;
+            case "offline":
+            default:
+                botEl.textContent = "Bot Offline";
+                botEl.style.color = "#f44336";
+                break;
         }
     }
-    
+
     // ---- Button State ----
-    if (startBtn) startBtn.disabled = btnBool;   // disable Start if bot is up
-    if (stopBtn) stopBtn.disabled = !btnBool;    // disable Stop if bot is down
-    if (rebootBtn) rebootBtn.disabled = !btnBool;
-    
-    // ---- Debugging Log ----
-    console.log(`[STATUS] Web=${webOK ? "Online" : "Offline"} | Bot=${botOK ? "Online" : "Offline"}`);
+    const isOnline = botStatus === "online";
+    const isBooting = botStatus === "booting";
+
+    if (startBtn) startBtn.disabled = isOnline || isBooting;
+    if (stopBtn) stopBtn.disabled = !isOnline && !isBooting;
+    if (rebootBtn) rebootBtn.disabled = !isOnline;
+
+    console.log(`[STATUS] Web=${webOK ? "Online" : "Offline"} | Bot=${botStatus}`);
 }
