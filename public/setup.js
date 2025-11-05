@@ -13,7 +13,9 @@ window.onload = async () => {
             text_channel_id: tc
         });
         
-        showStatus("Saving bot configuration...", "success", document.getElementById("statusMessage"));
+        statusMessage = document.getElementById("statusMessage");
+        
+        showStatus("Saving bot configuration...", "success", statusMessage);
     };
     
     document.getElementById("updateQueueBtn").onclick = () => {
