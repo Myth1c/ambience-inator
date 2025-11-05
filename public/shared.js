@@ -130,6 +130,17 @@ function handleIncomingCommand(data) {
                     if (typeof window.onReturnAmbienceSave === "function")
                         window.onReturnAmbienceSave(data.data?.ambience);
                     break;
+                    
+                case "JOINEDVC":
+                    if (typeof window.onReturnVCJoin === "function")
+                        window.onReturnVCJoin();
+                    break;
+                    
+                case "LEFTVC":
+                    if (typeof window.onReturnVCLeft === "function")
+                        window.onReturnVCLeft();
+                    break;
+                    
 
                 default:
                     console.log("[WS] Unhandled response:", data);
