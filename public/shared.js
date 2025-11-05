@@ -56,8 +56,18 @@ async function authCheck() {
 function connectWebSocket(onMessageCallback) {
     ws = new WebSocket(WS_URL);
 
-    ws.onopen = () => console.log("[WS] Connected to backend");
-    ws.onclose = () => console.warn("[WS] Disconnected");
+    ws.onopen = () => {
+        console.log("[WS] Connected");
+        if (typeof window.onWebSocketConnected === "function")
+            window.onWebSocketConnected();
+    };
+    
+    ws.onclose = () => {
+        console.warn("[WS] Closed");
+        if (typeof window.onWebSocketClosed === "function")
+            window.onWebSocketClosed();
+    };
+    
     ws.onerror = (e) => console.error("[WS] Error:", e);
    
     ws.onmessage = (msg) => {
@@ -214,6 +224,12 @@ function showStatus(message, type = "success", statusElement = null){
     
 }
 
+// Auto-connect once the page loads
+window.addEventListener("load", () => {
+    if (!window.ws || window.ws.readyState > 1) {
+        connectWebSocket();
+    }
+});
 
 
 // === Export-like global access ===
