@@ -264,9 +264,34 @@ function showStatus(message, type = "success", statusElement = null){
 window.addEventListener("load", () => {
     if (!window.ws || window.ws.readyState > 1) {
         connectWebSocket();
+        startHeartbeat(30000)
     }
 });
 
+
+function startHeartbeat(interval = 60000){
+    async function ping(){
+        try{
+            const res = await fetch(`${API_BASE}/heartbeat`, {method: "GET"})
+            const data = await res.json();
+            const botOK = !!data.bot_connected;
+            const webOK = !!data.ok;
+            
+            if (typeof window.onHeartbeatUpdate === "function"){
+                window.onHeartbeatUpdate(webOK, botOK);
+            }
+        }catch(e){
+            console.warn("[HEARTBEAT] Webserver unreachable");
+            if (typeof window.onHeartbeatUpdate === "function"){
+                window.onHeartbeatUpdate(false, false);
+            }
+        }
+    }
+    
+    // Initial ping, then repeat
+    ping();
+    return setInterval(ping, interval);
+}
 
 // === Export-like global access ===
 window.API_BASE = API_BASE;

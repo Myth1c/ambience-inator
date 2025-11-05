@@ -29,62 +29,55 @@ window.onload = async () => {
     
 };
 
-window.onBotStatusUpdate = (online) => { updateBotStatus(online); } 
+window.onHeartbeatUpdate = (webOK, botOK) => { updateBotStatus(webOK, botOK) };
 
 window.onWebSocketConnected = () => {
     sendCommand("GET_BOT_STATUS");
 }
 
 // ===== Helpers =====
-function updateBotStatus(online) {
-    const el = document.getElementById("statusMessage");
+function updateBotStatus(webOK, botOK) {
+    const webEl = document.getElementById("web-status");
+    const botEl = document.getElementById("bot-status");
     
-    botConnectionState = online
-    btnBool = true
+    const startBtn = document.getElementById("startBotBtn");
+    const stopBtn = document.getElementById("stopBotBtn");
+    const rebootBtn = document.getElementById("rebootBotBtn");
     
-    // Update immediate text + color
-    if (botConnectionState === "online") {
-        el.textContent = "Bot is Online";
-        el.style.color = "#4caf50";
-        if (window._botCheckTimer) {
-            clearInterval(window._botCheckTimer);
-            window._botCheckTimer = null
-        }
-        btnBool = true
-    } else if (botConnectionState === "offline") {
-        el.textContent = "Bot is Offline";
-        el.style.color = "#f44336";
-        if (window._botCheckTimer) {
-            clearInterval(window._botCheckTimer);
-            window._botCheckTimer = null
-        }
-        btnBool = false
-    } else {
-        el.textContent = "Bot is starting...";
-        el.style.color = "#ffca28";
-
-        // Start a background polling loop if one isn’t running
-        if (!window._botCheckTimer) {
-            window._botCheckTimer = setInterval(() => {
-                console.log("[WEB] Checking bot status");
-                sendCommand("GET_BOT_STATUS");
-
-                // If playbackState or global var tracks bot status, check it here
-                if (botConnectionState === "online") {
-                    updateBotStatus(true);
-                    clearInterval(window._botCheckTimer);
-                    window._botCheckTimer = null;
-                } else if (botConnectionState === "offline") {
-                    updateBotStatus(false);
-                    clearInterval(window._botCheckTimer);
-                    window._botCheckTimer = null;
-                }
-
-            }, 10);
+    // Default to disabled if anything is down
+    let btnBool = false;
+    
+    // --- Web Server Status ---
+    if (webEl){
+        if (webOK){
+            webEl.textContent = "Webserver Online";
+            webEl.style.color = "#4caf50";
+        }else{
+            webEl.textContent = "Unable to reach WebServer";
+            webEl.style.color = "#f44336";
         }
     }
     
-    document.getElementById("startBotBtn").disabled = btnBool;
-    document.getElementById("stopBotBtn").disabled = !btnBool;
-    document.getElementById("rebootBotBtn").disabled = !btnBool;
+    // ---- Bot Status ----
+    if (botEl) {
+        if (botOK) {
+            botEl.textContent = "Bot Online";
+            botEl.style.color = "#4caf50";
+            btnBool = true;
+        } else if (webOK && !botOK) {
+            botEl.textContent = "Bot Disconnected";
+            botEl.style.color = "#f44336";
+        } else {
+            botEl.textContent = "Unable to reach Ambience-inator Bot";
+            botEl.style.color = "#ffca28";
+        }
+    }
+    
+    // ---- Button State ----
+    if (startBtn) startBtn.disabled = btnBool;   // disable Start if bot is up
+    if (stopBtn) stopBtn.disabled = !btnBool;    // disable Stop if bot is down
+    if (rebootBtn) rebootBtn.disabled = !btnBool;
+    
+    // ---- Debugging Log ----
+    console.log(`[STATUS] Web=${webOK ? "Online" : "Offline"} | Bot=${botOK ? "Online" : "Offline"}`);
 }
