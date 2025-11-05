@@ -22,7 +22,7 @@ let playbackState = {
 
 window.onload = () => {
     //ws = new WebSocket(`wss://localhost:8080/ws`);  // if local dev
-    ws = new WebSocke(`wss://ambienceinator-web.onrender.com/ws`) // (if hosted backend)
+    ws = new WebSocket(`wss://ambienceinator-web.onrender.com/ws`) // (if hosted backend)
 
     ws.onopen = () => {
         console.log("[WS] WS Connected");
