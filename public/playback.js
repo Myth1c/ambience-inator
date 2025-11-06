@@ -13,8 +13,8 @@ window.onload = async () => {
 
     document.getElementById("musicSkip").onclick = () => sendCommand("NEXT_SONG");
     document.getElementById("musicPrev").onclick = () => sendCommand("PREVIOUS_SONG");
-    document.getElementById("musicShuffle").onclick = toggleShuffle;
-    document.getElementById("musicLoop").onclick = toggleLoop;
+    document.getElementById("musicShuffle").onclick = sendCommand("SET_SHUFFLE", { enabled: playbackState.music.shuffle });
+    document.getElementById("musicLoop").onclick = sendCommand("SET_LOOP", { enabled: window.playbackState.music.loop });
 
     document.getElementById("musicVolume").oninput = e => {
         const vol = parseInt(e.target.value);
@@ -27,15 +27,13 @@ window.onload = async () => {
     };
 
     document.getElementById("joinVCBtn").onclick = () => {
-        if (playbackState.in_vc) return;
+        if (window.playbackState.in_vc) return;
         sendCommand("JOINVC");
-        updateVCButtons();
     };
 
     document.getElementById("leaveVCBtn").onclick = () => {
-        if (!playbackState.in_vc) return;
+        if (!window.playbackState.in_vc) return;
         sendCommand("LEAVEVC");
-        updateVCButtons();
     };
 };
 
@@ -44,6 +42,9 @@ window.onPlaybackStateUpdated = () => {
     updateNowPlaying("music");
     updateNowPlaying("ambience");
     updateVCButtons();
+    updateToggleVisual("musicLoop", window.playbackState.music.loop);
+    updateToggleVisual("musicShuffle", window.playbackState.music.shuffle);
+    updatePlaybackButtons(window.playbackState.music.playing, window.playbackState.ambience.playing);
 }
 
 window.onReturnPlaylists = (pls) => {
@@ -95,16 +96,7 @@ function togglePlayback(type) {
     const cmd = isPlaying ? "PAUSE" : "RESUME";
 
     sendCommand(cmd, { type });
-}
-
-function toggleShuffle() {
-    sendCommand("SET_SHUFFLE", { enabled: playbackState.music.shuffle });
-    updateToggleVisual("musicShuffle", window.playbackState.music.shuffle);
-}
-
-function toggleLoop() {
-    sendCommand("SET_LOOP", { enabled: window.playbackState.music.loop });
-    updateToggleVisual("musicLoop", window.playbackState.music.loop);
+    
 }
 
 // ===== Visual Updating =====
@@ -143,4 +135,22 @@ function updateVCButtons() {
 
     joinVCBtn.disabled = inVC;
     leaveVCBtn.disabled = !inVC;
+}
+
+function updatePlaybackButtons(musicPlaying, ambiencePlaying){
+    const musicPlay = document.getElementById("musicPlayPause")
+    const ambPlay = document.getElementById("ambiencePlayPause")
+    
+    if(musicPlaying){
+        musicPlay.textContent = "Pause";
+    }else{
+        musicPlay.textContent = "Play";
+    }
+    
+    if(ambiencePlaying){
+        ambPlay.textContent = "Pause";
+    }else{
+        ambPlay.textContent = "Play";
+    }
+    
 }
