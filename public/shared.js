@@ -101,10 +101,11 @@ function handleIncomingCommand(data) {
 
             switch (cmd) {
                 case "PLAYBACK_STATE":
-                    const stateData = data.state || data.data?.state;
-                    updatePlaybackState(stateData);
+                    const state = data.payload || data.state;
+                    console.log(`Received state/payload: ${JSON.stringify(state)} -Shared.js`)
+                    updatePlaybackState(state);
                     if (typeof window.onReturnPlaybackState === "function")
-                        window.onReturnPlaybackState(stateData);
+                        window.onReturnPlaybackState(state);
                     break;
 
                 case "BOT_STATUS":
@@ -153,10 +154,10 @@ function handleIncomingCommand(data) {
         // === Bot playback state return ===
         case "state_update":
             const state = data.payload || data.state;
-            console.log(`Received state/payload: ${JSON.stringify(state)}`)
+            console.log(`Received state/payload: ${JSON.stringify(state)} -Shared.js`)
             updatePlaybackState(state);
             if (typeof window.onReturnPlaybackState === "function")
-                window.onReturnPlaybackState();
+                window.onReturnPlaybackState(state);
             break;
 
         case "bot_hello":
