@@ -149,12 +149,12 @@ function handleIncomingCommand(data) {
             }
             break;
 
-        // === Bot specific heartbeat or live updates ===
+        // === Bot playback state return ===
         case "state_update":
             const state = data.payload || data.state;
             updatePlaybackState(state);
-            if (typeof window.onBotHeartbeat === "function")
-                window.onBotHeartbeat(state);
+            if (typeof window.onReturnPlaybackState === "function")
+                window.onReturnPlaybackState(state);
             break;
 
         case "bot_hello":
