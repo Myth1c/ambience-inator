@@ -226,8 +226,6 @@ function updatePlaybackState(newState) {
 
     if (typeof newState.in_vc === "boolean") window.playbackState.in_vc = newState.in_vc ?? window.playbackState.in_vc;
     
-    if (newState.bot_online) window.playbackState.bot_online = newState.bot_online ?? window.playbackState.bot_online;
-
     // --- Notify page listeners ---
     if (typeof window.onPlaybackStateUpdated === "function") {
         window.onPlaybackStateUpdated(window.playbackState);
