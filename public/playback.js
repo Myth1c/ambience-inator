@@ -50,11 +50,13 @@ window.onReturnPlaybackState = () => {
 }
 
 window.onReturnPlaylists = (pls) => {
+    console.log(`Attempting to display ${JSON.stringify(pls)}`)
     playlists = pls
     populatePlaylistList()
 }
 
 window.onReturnAmbience = (amb) => {
+    console.log(`Attempting to display ${JSON.stringify(amb)}`)
     ambience = amb
     populateAmbienceList()
 }
