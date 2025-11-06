@@ -49,11 +49,13 @@ window.onReturnPlaybackState = () => {
     updateVCButtons();
 }
 
-window.onReturnPlaylists = () => {
+window.onReturnPlaylists = (pls) => {
+    playlists = pls
     populatePlaylistList()
 }
 
-window.onReturnAmbience = () => {
+window.onReturnAmbience = (amb) => {
+    ambience = amb
     populateAmbienceList()
 }
 
