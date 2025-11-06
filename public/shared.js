@@ -12,7 +12,7 @@ let playbackState = {
         track_name: "None",
         playing: false, 
         volume: 100, 
-        shuffle: false, 
+        shuffle: true, 
         loop: false 
     },
     ambience: { 
