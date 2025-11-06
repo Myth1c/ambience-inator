@@ -43,8 +43,8 @@ window.onload = async () => {
     };
 };
 
-window.onReturnPlaybackState = (newState) => {
-    console.log(`Playback.js received state update event with payload: ${JSON.stringify(playbackState)}`)
+window.onPlaybackStateUpdated = () => {
+    console.log("Playback.js received state update event");
     updateNowPlaying("music");
     updateNowPlaying("ambience");
     updateVCButtons();

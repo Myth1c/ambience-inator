@@ -102,10 +102,8 @@ function handleIncomingCommand(data) {
             switch (cmd) {
                 case "PLAYBACK_STATE":
                     const state = data.payload || data.state;
+                    console.log(`Received state/payload: ${JSON.stringify(state)}`)
                     updatePlaybackState(state);
-                    if (typeof window.onReturnPlaybackState === "function")
-                        window.onReturnPlaybackState(state);
-                    break;
 
                 case "BOT_STATUS":
                     if (typeof window.onReturnStatus === "function")
@@ -155,9 +153,6 @@ function handleIncomingCommand(data) {
             const state = data.payload || data.state;
             console.log(`Received state/payload: ${JSON.stringify(state)}`)
             updatePlaybackState(state);
-            if (typeof window.onReturnPlaybackState === "function")
-                window.onReturnPlaybackState(state);
-            break;
 
         case "bot_hello":
             if (typeof window.onReturnStatus === "function")
@@ -191,35 +186,36 @@ function sendCommand(command, data = {}) {
 function updatePlaybackState(newState) {
     if (!newState) return;
 
-    oldState = window.playbackState;
-        
+    console.log(`Old Playback State: ${JSON.stringify(window.playbackState)}`);
+    
     // Merge in new data safely
     if (newState.music) {
-        ps.music = {
-            playlist_name: newState.music.playlist_name ?? ps.music.playlist_name,
-            track_name: newState.music.track_name ?? ps.music.track_name,
-            playing: newState.music.playing ?? ps.music.playing,
-            volume: newState.music.volume ?? ps.music.volume,
-            shuffle: newState.music.shuffle ?? ps.music.shuffle,
-            loop: newState.music.loop ?? ps.music.loop,
+        window.playbackState.music = {
+            playlist_name: newState.music.playlist_name ?? window.playbackState.music.playlist_name,
+            track_name: newState.music.track_name ?? window.playbackState.music.track_name,
+            playing: newState.music.playing ?? window.playbackState.music.playing,
+            volume: newState.music.volume ?? window.playbackState.music.volume,
+            shuffle: newState.music.shuffle ?? window.playbackState.music.shuffle,
+            loop: newState.music.loop ?? window.playbackState.music.loop,
         };
     }
 
     if (newState.ambience) {
-        ps.ambience = {
-            name: newState.ambience.name ?? ps.ambience.name,
-            playing: newState.ambience.playing ?? ps.ambience.playing,
-            volume: newState.ambience.volume ?? ps.ambience.volume,
+        window.playbackState.ambience = {
+            name: newState.ambience.name ?? window.playbackState.ambience.name,
+            playing: newState.ambience.playing ?? window.playbackState.ambience.playing,
+            volume: newState.ambience.volume ?? window.playbackState.ambience.volume,
         };
     }
 
-    if (typeof newState.in_vc === "boolean") ps.in_vc = newState.in_vc;
+    if (typeof newState.in_vc === "boolean") window.playbackState.in_vc = newState.in_vc;
 
     // Notify page scripts (if any)
     if (typeof window.onPlaybackStateUpdated === "function") {
-        window.onPlaybackStateUpdated(ps);
+        window.onPlaybackStateUpdated(window.playbackState);
     }
     
+    console.log(`New Playback State: ${JSON.stringify(playbackState)}`);
 }
 
 function resetPlaybackState(){
