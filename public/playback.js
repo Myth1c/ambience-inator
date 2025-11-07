@@ -2,7 +2,7 @@
 
 let playlists = {};
 let ambience = {};
-
+// ===== WINDOW STARTUP =====
 window.onload = async () => {
     const authed = await authCheck();
     if (!authed) return;
@@ -37,6 +37,7 @@ window.onload = async () => {
     };
 };
 
+// ===== Event Listeners =====
 window.onPlaybackStateUpdated = () => {
     console.log("Playback.js received state update event");
     updateNowPlaying("music");
@@ -68,6 +69,14 @@ window.onWebSocketConnected = () => {
 
 window.onReturnStatus = (status) => {
     updatePlaybackAvailability(status)
+}
+
+function onReturnVCJoin(){
+    updatePlaybackAvailability("online")
+}
+
+function onReturnVCLeft(){
+    updatePlaybackAvailability("online")
 }
 
 // ====== UI Setup ======
