@@ -649,6 +649,12 @@
   background: var(--accent-dark);
   color: var(--bg);
 }
+.playback-panel__btn.active-toggle {
+  border-color: var(--accent);
+  background: rgba(var(--accent), 0.15);
+  box-shadow: 0 0 10px var(--accent);
+  color: var(--accent);
+}
 .playback-panel__volume {
   flex: 1 1 150px;
   min-width: 150px;

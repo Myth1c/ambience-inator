@@ -790,6 +790,13 @@ $font-main: "Fira Mono", monospace;
       background: $color-accent-dark;
       color: $color-bg;
     }
+    
+    &.active-toggle{
+      border-color: $color-accent;
+      background: rgba($color-accent, 0.15);
+      box-shadow: 0 0 10px $color-accent;
+      color: $color-accent;
+    }
   }
 
   &__volume {

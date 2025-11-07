@@ -143,7 +143,12 @@ function updateNowPlaying(type) {
 function updateToggleVisual(id, active) {
     const btn = document.getElementById(id);
     if (!btn) return;
-    btn.classList.toggle("active", active);
+    
+    if (active){
+        btn.classList.add("active-toggle")
+    }else{
+        btn.classList.remove("active-toggle")
+    }
 }
 
 function updatePlaybackButtons(musicPlaying, ambiencePlaying) {
