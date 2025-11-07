@@ -633,3 +633,10 @@ button:disabled, select:disabled {
 .button-row button {
     width: 200px;
 }
+
+.disabled-panel,
+.disabled-button {
+    opacity: 0.5;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+}

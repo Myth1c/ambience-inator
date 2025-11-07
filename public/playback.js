@@ -60,9 +60,14 @@ window.onReturnAmbience = (amb) => {
 }
 
 window.onWebSocketConnected = () => {
+    sendCommand("GET_BOT_STATUS");
     sendCommand("GET_PLAYLISTS");
     sendCommand("GET_AMBIENCE");
     sendCommand("GET_PLAYBACK_STATE");
+}
+
+window.onReturnStatus = (status) => {
+    updatePlaybackAvailability(status)
 }
 
 // ====== UI Setup ======
@@ -153,4 +158,43 @@ function updatePlaybackButtons(musicPlaying, ambiencePlaying){
         ambPlay.textContent = "Play";
     }
     
+}
+
+function updatePlaybackAvailability(state){
+    const online = state === "online";
+    const inVC = window.playbackState.in_vc === true;
+    
+    // Elements
+    const musicPanel = document.getElementById("musicPanel")
+    const ambiencePanel = document.getElementById("ambiencePanel")
+    const vcPanel = document.getElementById("vcPanel")
+    
+    // Logic:
+    // Bot offline -> Everything is disabled
+    // Bot offline but NOT in VC -> Playback buttons are disabled, but VC join button is enabled
+    // Bot online AND in VC -> Everything is enabled
+    
+    if(!online){
+        // Disable everything
+        musicPanel.classList.add("disabled-panel");
+        ambiencePanel.classList.add("disabled-panel");
+        vcPanel.classList.add("disabled-panel");
+        
+    }else {
+        // Bot online:
+        vcPanel.classList.remove("disabled-panel");
+        
+        if(!inVC){
+            // Online but NOT in a VC
+            musicPanel.classList.add("disabled-panel");
+            ambiencePanel.classList.add("disabled-panel");
+            
+        }else{
+            // Online AND in a vc
+            musicPanel.classList.remove("disabled-panel");
+            ambiencePanel.classList.remove("disabled-panel");
+            
+        }
+        
+    }
 }
