@@ -657,9 +657,9 @@
 }
 .playback-panel__btn.active-toggle {
   border-color: var(--accent);
-  background: rgba(var(--accent), 0.75);
-  box-shadow: 0 0 10px var(--accent);
   color: var(--accent);
+  box-shadow: 0 0 8px var(--accent);
+  background: rgba(var(--accent), 0.15);
 }
 .playback-panel__volume {
   flex: 1 1 150px;
@@ -705,6 +705,7 @@
 .playback-nowplaying__line {
   color: var(--grey);
   margin: 0.25rem 0;
+  text-overflow: ellipsis;
 }
 
 @media (max-width: 750) {
