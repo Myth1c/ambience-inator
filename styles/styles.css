@@ -656,6 +656,7 @@
   color: var(--bg);
 }
 .playback-panel__btn.active-toggle {
+  background: var(--bg);
   border-color: var(--accent);
   color: var(--accent);
   box-shadow: 0 0 8px var(--accent);

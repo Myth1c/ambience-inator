@@ -799,6 +799,7 @@ $font-main: "Fira Mono", monospace;
     }
     
     &.active-toggle{
+      background: $color-bg;
       border-color: $color-accent;
       color: $color-accent;
       box-shadow: 0 0 8px $color-accent;
