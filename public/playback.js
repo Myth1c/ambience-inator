@@ -162,6 +162,7 @@ function updateToggleVisual(id, active) {
     if (!btn) return;
     
     if (active){
+        console.log(`${JSON.stringify(btn.classList)}`)
         btn.classList.add("active-toggle")
     }else{
         btn.classList.remove("active-toggle")
