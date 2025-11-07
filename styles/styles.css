@@ -644,7 +644,7 @@
   padding: 0.5rem 1rem;
   border: 1px solid var(--accent);
   color: var(--grey);
-  background: var(--bg-light);
+  background: transparent;
   border-radius: 0.35rem;
   cursor: pointer;
   transition: all 0.15s ease;
@@ -656,7 +656,7 @@
   color: var(--bg);
 }
 .playback-panel__btn.active-toggle {
-  background-color: var(--bg);
+  background: var(--accent-dark);
   border-color: var(--accent);
   color: var(--accent);
   box-shadow: 0 0 8px var(--accent);
