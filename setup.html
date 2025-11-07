@@ -39,6 +39,7 @@
         <section class="setup-theme">
             <h2 class="setup-theme__title">Theme</h2>
 
+            <!-- Theme Selector -->
             <div class="setup-theme__select-wrapper">
                 <select id="theme-select" class="setup-theme__select setup-theme__select--styled">
                     <option value="green">Green (Default)</option>
@@ -48,25 +49,49 @@
                 </select>
             </div>
 
-            <!-- Preview Panel -->
-            <div class="setup-theme__preview">
+            <!-- PREVIEW BUFFET -->
+            <div class="setup-theme__preview-area">
                 <h3 class="setup-theme__preview-title">Preview</h3>
 
-                <div class="setup-theme__preview-box">
-                    <input
-                        type="text"
-                        class="setup-theme__preview-input"
-                        placeholder="Sample text..."
-                    />
+                <div class="setup-theme__preview-grid">
 
-                    <button class="setup-theme__preview-btn">
-                        Preview Button
-                    </button>
+                    <!-- Buttons -->
+                    <button class="preview-btn">Button</button>
+                    <button class="preview-btn preview-btn--accent">Accent Button</button>
+
+                    <!-- Inputs -->
+                    <input type="text" class="preview-input" placeholder="Input field" />
+
+                    <!-- Panels -->
+                    <div class="preview-panel">
+                        <span>Panel Area</span>
+                    </div>
+
+                    <!-- Headings -->
+                    <h4 class="preview-heading">This is a Heading</h4>
+
+                    <!-- Status labels -->
+                    <span class="preview-status preview-status--ok">Status: OK</span>
+                    <span class="preview-status preview-status--warn">Status: Warning</span>
+                    <span class="preview-status preview-status--err">Status: Error</span>
+
+                    <!-- Toggle Buttons -->
+                    <button class="preview-toggle">Toggle Off</button>
+                    <button class="preview-toggle preview-toggle--on">Toggle On</button>
+
+                    <!-- Slider -->
+                    <input type="range" class="preview-slider" />
                 </div>
             </div>
 
+            <!-- APPLY THEME -->
+            <button id="theme-apply" class="setup-theme__apply-btn">
+                Apply Theme
+            </button>
+
             <p class="setup-theme__status" id="theme-status"></p>
         </section>
+
     </main>
 
     <a href="./" class="setup__back-btn back-btn">Back</a>
