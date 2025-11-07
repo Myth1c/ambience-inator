@@ -340,12 +340,15 @@
   color: var(--accent);
 }
 .setup-theme .preview-input {
-  padding: 0.6rem;
   width: 100%;
-  background: var(--bg-light);
-  border: 1px solid var(--grey);
+  padding: 0.75rem;
+  border-radius: 0.35rem;
+  border: 1px solid var(--grey-dark);
+  background: var(--bg);
   color: var(--grey);
-  border-radius: 4px;
+  margin-bottom: 1rem;
+  font-family: "Fira Mono", monospace;
+  box-sizing: border-box;
 }
 .setup-theme .preview-panel {
   padding: 1rem;
