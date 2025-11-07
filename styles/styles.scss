@@ -1,12 +1,57 @@
+// ============================
+// THEME DEFINITIONS
+// ============================
+
+:root,
+[data-theme="green"] {
+    --bg:         #0e0e0e;
+    --bg-light:   #1a1a1a;
+    --accent:     #3aff3a;
+    --accent-dark:#2dc62d;
+    --grey:       #cccccc;
+    --grey-dark:  #888888;
+}
+
+[data-theme="purple"] {
+    --bg:         #120012;
+    --bg-light:   #1f0b2d;
+    --accent:     #c259ff;
+    --accent-dark:#8c32c8;
+    --grey:       #e0d4f7;
+    --grey-dark:  #9a7fc0;
+}
+
+[data-theme="pink"] {
+    --bg:         #13000d;
+    --bg-light:   #2b0f20;
+    --accent:     #ff5fad;
+    --accent-dark:#d83d89;
+    --grey:       #ffd9ec;
+    --grey-dark:  #b38aa3;
+}
+
+[data-theme="forest"] {
+    --bg:         #0c140c;
+    --bg-light:   #182418;
+    --accent:     #4cbc4c;
+    --accent-dark:#359335;
+    --grey:       #d2e2d2;
+    --grey-dark:  #90a790;
+}
+
+
+
+
+
 // =========================
 // Variables
 // =========================
-$color-bg: #0e0e0e;
-$color-bg-light: #1a1a1a;
-$color-accent: #3aff3a;
-$color-accent-dark: #2dc62d;
-$color-grey: #cccccc;
-$color-grey-dark: #888888;
+$color-bg: var(--bg);
+$color-bg-light: var(--bg-light);
+$color-accent: var(--accent);
+$color-accent-dark: var(--accent-dark);
+$color-grey: var(--grey);
+$color-grey-dark: var(--grey-dark);
 
 $font-main: "Fira Mono", monospace;
 

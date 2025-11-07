@@ -40,85 +40,44 @@ window.onload = async () => {
     });
 
     // ========================
-    // THEME PREVIEW + APPLY
+    // THEME SWITCHING
     // ========================
 
-    // Mirror of themes from shared.js — JS-only preview
-    const themes = {
-        green: {
-            bg: "#0e0e0e",
-            panel: "#1a1a1a",
-            accent: "#3aff3a",
-            text: "#cccccc"
-        },
-        purple: {
-            bg: "#0b0b15",
-            panel: "#111122",
-            accent: "#6d5bff",
-            text: "#dddddd"
-        },
-        pink: {
-            bg: "#1a0017",
-            panel: "#2a0030",
-            accent: "#ff00c8",
-            text: "#e0e0e0"
-        },
-        forest: {
-            bg: "#0f140f",
-            panel: "#1c241c",
-            accent: "#79c653",
-            text: "#d7d7c3"
-        }
-    };
-
-    function applyPreview(themeName) {
-        const th = themes[themeName];
-        if (!th) return;
-        
-        // Preview Input
-        previewInput.style.background = th.panel;
-        previewInput.style.color = th.text;
-        previewInput.style.borderColor = th.accent;
-
-        // Preview Button
-        previewBtn.style.borderColor = th.accent;
-        previewBtn.style.color = th.text;
-        previewBtn.style.background = "transparent";
-    }
-
     function applyTheme(themeName) {
-        const root = document.documentElement;
-        const th = themes[themeName];
+        document.documentElement.setAttribute("data-theme", themeName);
 
-        // Apply CSS variables to the whole site
-        root.style.setProperty("--bg",           th.bg);
-        root.style.setProperty("--bg-light",     th.panel);
-        root.style.setProperty("--accent",       th.accent);
-        root.style.setProperty("--accent-dark",  th.accent);
-        root.style.setProperty("--grey",         th.text);
-        root.style.setProperty("--grey-dark",    th.text);
-
-        // Save to localStorage
+        // Save theme
         localStorage.setItem("ai-theme", themeName);
 
         themeStatus.textContent = `Theme set to ${themeName}`;
     }
 
-    // === On theme selection ===
+    function applyPreview(themeName) {
+        // Temporarily apply theme to compute preview values
+        document.documentElement.setAttribute("data-theme", themeName);
+
+        const styles = getComputedStyle(document.documentElement);
+
+        previewInput.style.background = styles.getPropertyValue("--bg-light");
+        previewInput.style.color = styles.getPropertyValue("--grey");
+        previewInput.style.borderColor = styles.getPropertyValue("--accent");
+
+        previewBtn.style.borderColor = styles.getPropertyValue("--accent");
+        previewBtn.style.color = styles.getPropertyValue("--grey");
+        previewBtn.style.background = "transparent";
+    }
+
+    // Theme dropdown change event
     themeSelect.addEventListener("change", () => {
         const themeName = themeSelect.value;
-
-        console.log(`Attempting to preview theme ${themeName}`)
-        applyPreview(themeName);
         applyTheme(themeName);
-        console.log("Applying theme:", themeName, th);
-        console.log("Computed accent:", getComputedStyle(document.documentElement).getPropertyValue("--accent"));
-
+        applyPreview(themeName);
     });
 
-    // === Restore saved theme on load ===
+    // Restore theme on load
     const savedTheme = localStorage.getItem("ai-theme") || "green";
     themeSelect.value = savedTheme;
-    applyPreview(savedTheme);
+
     applyTheme(savedTheme);
+    applyPreview(savedTheme);
 };
