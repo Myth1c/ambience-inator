@@ -16,7 +16,7 @@ window.onload = async () => {
     // === Button Actions
     rebootBtn.onclick = () => {
         console.log("[WEB] Sending REBOOT to bot");
-        sendCommand("REBOOT");
+        sendCommand("REBOOT_BOT");
     };
     startBtn.onclick = () => {
         console.log("[WEB] Sending START_BOT");
