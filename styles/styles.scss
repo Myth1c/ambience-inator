@@ -972,15 +972,17 @@ $font-main: "Fira Mono", monospace;
 }
 
 .playback-floating-vc__btn:hover:not(:disabled) {
-    background: $color-accent-dark;
-    color: $color-bg;
-    border-color: $color-accent;
-    box-shadow: 0 0 6px $color-accent;
+  background: $color-accent-dark;
+  color: $color-bg;
+  border-color: $color-accent;
+  box-shadow: 0 0 6px $color-accent;
 }
 
 .playback-floating-vc__btn:disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
+  border-color: $color-accent;
+  color: $color-accent;
+  box-shadow: 0 0 8px $color-accent;
+  background: rgba($color-accent, 0.15);
 }
 
 
