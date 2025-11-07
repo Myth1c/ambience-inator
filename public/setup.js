@@ -70,8 +70,19 @@ window.onload = async () => {
     // Theme dropdown change event
     themeSelect.addEventListener("change", () => {
         const themeName = themeSelect.value;
-        applyTheme(themeName);
         applyPreview(themeName);
+    });
+    
+    document.getElementById("theme-apply").addEventListener("click", () => {
+        const themeName = themeSelect.value;
+
+        // Apply site-wide
+        applyTheme(themeName);
+
+        // Save globally
+        localStorage.setItem("ai-theme", themeName);
+
+        themeStatus.textContent = `Theme applied: ${themeName}`;
     });
 
     // Restore theme on load
