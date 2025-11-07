@@ -785,7 +785,7 @@ $font-main: "Fira Mono", monospace;
     padding: 0.5rem 1rem;
     border: 1px solid $color-accent;
     color: $color-grey;
-    background: transparent;
+    background: $color-bg-light;
     border-radius: 0.35rem;
     cursor: pointer;
     transition: all 0.15s ease;
