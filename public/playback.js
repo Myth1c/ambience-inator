@@ -5,6 +5,7 @@
 // Local cached data
 let playlists = {};
 let ambience = {};
+let botOnline = "offline"
 
 // ========================
 // ON PAGE LOAD
@@ -71,12 +72,23 @@ window.onWebSocketConnected = () => {
     sendCommand("GET_PLAYLISTS");
     sendCommand("GET_AMBIENCE");
     sendCommand("GET_PLAYBACK_STATE");
+    updatePlaybackAvailability();
 };
 
-window.onReturnStatus = (status) => updatePlaybackAvailability(status);
+window.onReturnStatus = (status) => {
+    botOnline = status;
+    updatePlaybackAvailability();
+}
 
-function onReturnVCJoin() { updatePlaybackAvailability("online"); }
-function onReturnVCLeft() { updatePlaybackAvailability("online"); }
+function onReturnVCJoin() { 
+    botOnline = "online";
+    updatePlaybackAvailability(); 
+}
+function onReturnVCLeft() { 
+    botOnline = "online";
+    updatePlaybackAvailability(); 
+    
+}
 
 // ====== UI Setup ======
 function populatePlaylistList() {
@@ -182,8 +194,8 @@ function updateVCButtons() {
     leave.disabled = !inVC;
 }
 
-function updatePlaybackAvailability(state) {
-    const online = state === "online";
+function updatePlaybackAvailability() {
+    const online = botOnline === "online";
     const inVC = window.playbackState.in_vc;
 
     const musicPanel = document.querySelector(".playback-panel--music");
