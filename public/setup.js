@@ -17,10 +17,11 @@ let setupEls = {
 // EVENT DELEGATION (CLICK)
 // ========================
 document.body.addEventListener("click", (e) => {
+    const btn = e.target.closest("#setup-save, #theme-apply");
+    if (!btn) return;
 
-    switch (e.target.id) {
+    switch (btn.id) {
 
-        // --- SAVE BOT CONFIG ---
         case "setup-save":
             if (!setupEls.inputText || !setupEls.inputVoice) return;
 
@@ -32,11 +33,11 @@ document.body.addEventListener("click", (e) => {
             showStatus("Saving bot configuration...", "success", setupEls.status);
             break;
 
-        // --- APPLY THEME BUTTON ---
         case "theme-apply":
             applyTheme(setupEls.themeSelect.value);
             localStorage.setItem("ai-theme", setupEls.themeSelect.value);
-            setupEls.themeStatus.textContent = `Theme applied: ${setupEls.themeSelect.value}`;
+            setupEls.themeStatus.textContent =
+                `Theme applied: ${setupEls.themeSelect.value}`;
             break;
     }
 });
@@ -46,15 +47,17 @@ document.body.addEventListener("click", (e) => {
 // EVENT DELEGATION (CHANGE)
 // ========================
 document.body.addEventListener("change", (e) => {
+    const control = e.target.closest("#theme-select");
+    if (!control) return;
 
-    switch (e.target.id) {
-
-        // --- THEME DROPDOWN ---
+    switch (control.id) {
         case "theme-select":
-            document.documentElement.setAttribute("data-theme", e.target.value);
+            document.documentElement
+                .setAttribute("data-theme", control.value);
             break;
     }
 });
+
 
 
 // ========================
