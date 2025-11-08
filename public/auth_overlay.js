@@ -23,16 +23,10 @@ const authOverlay = {
         // Check immediately
         const authed = await authCheck();
         if (!authed) {
-            this.requireAuth();
+            this.show();
         } else {
             this.minimize(false); // minimize but no flash
         }
-    },
-
-    requireAuth() {
-        this.overlay.classList.remove("hidden");
-        //this.floatBtn.classList.remove("hidden");
-        //this.floatBtn.classList.add("flash");
     },
 
     minimize(addFlash = true) {
@@ -48,7 +42,10 @@ const authOverlay = {
 
     show() {
         this.floatBtn.classList.add("hidden");
-        this.overlay.classList.remove("hidden");
+        this.overlay.classList.remove("hidden");    
+        setTimeout(() => {
+            document.getElementById("auth-input").focus();
+        }, 10);
     },
 
     async submit() {
@@ -78,6 +75,19 @@ const authOverlay = {
         }
     }
 };
+
+document.addEventListener("keydown", (e) => {
+    const overlay = document.getElementById("auth-overlay");
+    if (overlay.classList.contains("hidden")) return; // modal not shown → ignore
+
+    if (e.key === "Enter") {
+        document.getElementById("auth-submit").click();
+    }
+
+    if (e.key === "Escape") {
+        document.getElementById("auth-cancel").click();
+    }
+});
 
 // Initialize on DOM load
 window.addEventListener("DOMContentLoaded", () => authOverlay.init());
