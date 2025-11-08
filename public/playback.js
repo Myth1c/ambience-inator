@@ -202,9 +202,9 @@ function updatePlaybackAvailability() {
     
     console.log(`VC Status: ${inVC}\nOnline Status: ${online}`)
 
-    const musicPanel = document.querySelector("playback-panel--music");
-    const ambiencePanel = document.querySelector("playback-panel--ambience");
-    const vcPanel = document.querySelector("playback-floating-vc");
+    const musicPanel = document.querySelector(".playback-panel--music");
+    const ambiencePanel = document.querySelector(".playback-panel--ambience");
+    const vcPanel = document.querySelector(".playback-floating-vc");
 
     if (!online) {
         musicPanel.classList.add("disabled-panel");
