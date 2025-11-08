@@ -42,6 +42,8 @@ window.onload = async () => {
     document.getElementById("vc-leave").onclick = () => {
         if (window.playbackState.in_vc) sendCommand("LEAVEVC");
     };
+    
+    updatePlaybackAvailability();
 };
 
 // ========================
