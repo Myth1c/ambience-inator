@@ -45,13 +45,13 @@ window.onReturnStatus = (statusValue) => {
     // If we’re receiving this response, the webserver is definitely online
     const webOK = true;
 
-    updateBotStatus(webOK, statusValue);
+    updateBotStatus(webOK);
 };
 
 // ========================
 // Update UI for bot + webserver status
 // ========================
-function updateBotStatus(webOK, botStatus) {
+function updateBotStatus(webOK) {
  
     const btnStart = document.getElementById("btn-start");
     const btnStop = document.getElementById("btn-stop");
@@ -60,7 +60,7 @@ function updateBotStatus(webOK, botStatus) {
     const elBotStatus = document.getElementById("status-bot");
     const elWebStatus = document.getElementById("status-web");
 
-    
+    botStatus = window.playbackState.bot_online;
     
     // Normalize botStatus
     if (botStatus === true) botStatus = "online";
