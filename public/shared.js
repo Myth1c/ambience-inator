@@ -20,7 +20,8 @@ let playbackState = {
         playing: false, 
         volume: 25 
     },
-    in_vc: false
+    in_vc: false,
+    bot_online: "offline"
 };
 
 (function loadSavedTheme() {
@@ -107,6 +108,7 @@ function handleIncomingCommand(data) {
             switch (cmd) {
 
                 case "BOT_STATUS":
+                    if (data.data.online) window.playbackState.bot_online = data.data.online ?? window.playbackState.bot_online;
                     if (typeof window.onReturnStatus === "function")
                         window.onReturnStatus(data.data?.online);
                     break;
@@ -231,6 +233,8 @@ function updatePlaybackState(newState) {
     }
 
     if (typeof newState.in_vc === "boolean") window.playbackState.in_vc = newState.in_vc ?? window.playbackState.in_vc;
+    
+    if (newState.bot_online) window.playbackState.bot_online = newState.bot_online ?? window.playbackState.bot_online;
     
     // --- Notify page listeners ---
     if (typeof window.onPlaybackStateUpdated === "function") {

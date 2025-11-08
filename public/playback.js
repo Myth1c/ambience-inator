@@ -5,7 +5,6 @@
 // Local cached data
 let playlists = {};
 let ambience = {};
-let botOnline = "offline"
 
 // ========================
 // ON PAGE LOAD
@@ -78,16 +77,13 @@ window.onWebSocketConnected = () => {
 };
 
 window.onReturnStatus = (status) => {
-    botOnline = status;
     updatePlaybackAvailability();
 }
 
 function onReturnVCJoin() { 
-    botOnline = "online";
     updatePlaybackAvailability(); 
 }
 function onReturnVCLeft() { 
-    botOnline = "online";
     updatePlaybackAvailability(); 
     
 }
@@ -197,7 +193,7 @@ function updateVCButtons() {
 }
 
 function updatePlaybackAvailability() {
-    const online = botOnline === "online";
+    const online = window.playbackState.bot_online === "online";
     const inVC = window.playbackState.in_vc;
     
     console.log(`VC Status: ${inVC}\nOnline Status: ${online}`)
