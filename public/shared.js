@@ -207,7 +207,7 @@ function sendCommand(command, data = {}) {
             console.warn(`[WEB] Unauthorized user tried sending unauthorized command: ${command}`);
         if (!READ_ONLY_COMMANDS.includes(command)){
             console.warn("[WEB] User did not send a command in READ_ONLY_COMMAND");
-            //showStatus("Authorization required to use that feature", "warning", null, 10000);
+            showStatus("Authorization required to use that feature", "warning", null, 10000);
             return;
         }
     }
