@@ -314,14 +314,14 @@ function showStatus(message, type = "success", statusElement = null, timeout = 2
     
     // Reset classes
     statusElement.classList.remove(
-        "status-success",
-        "status-warning",
-        "status-error"
+        "status--ok",
+        "status--warn",
+        "status--err"
     );
 
-    if (type === "success") statusElement.classList.add("status-success");
-    if (type === "warning") statusElement.classList.add("status-warning");
-    if (type === "error") statusElement.classList.add("status-error");
+    if (type === "success") statusElement.classList.add("status--ok");
+    if (type === "warning") statusElement.classList.add("status--warn");
+    if (type === "error") statusElement.classList.add("status--err");
     
     // Fade in
     statusElement.classList.add("show");

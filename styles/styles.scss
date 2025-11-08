@@ -1185,3 +1185,7 @@ $font-main: "Fira Mono", monospace;
 .global-status.show {
   opacity: 1;
 }
+
+.status--ok   { color: $color-accent; }
+.status--warn { color: #ffcc00; }
+.status--err  { color: #ff4444; }

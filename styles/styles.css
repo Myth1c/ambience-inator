@@ -1003,4 +1003,16 @@
 
 .global-status.show {
   opacity: 1;
+}
+
+.status--ok {
+  color: var(--accent);
+}
+
+.status--warn {
+  color: #ffcc00;
+}
+
+.status--err {
+  color: #ff4444;
 }/*# sourceMappingURL=styles.css.map */
