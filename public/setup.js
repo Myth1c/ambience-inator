@@ -73,11 +73,7 @@ function applyTheme(themeName) {
 // ========================
 // PAGE LOAD
 // ========================
-document.addEventListener("DOMContentLoaded", async () => {
-    
-    // Run auth check
-    const authed = await authCheck();
-    if (!authed) return;
+window.onload = async () => {
 
     // Cache DOM elements
     setupEls.inputText    = document.getElementById("setup-text");
@@ -85,6 +81,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     setupEls.status       = document.getElementById("setup-status");
     setupEls.themeSelect  = document.getElementById("theme-select");
     setupEls.themeStatus  = document.getElementById("theme-status");
+
+    // Run auth check
+    const authed = await authCheck();
+    if (!authed) return;
+
 
     // Validate elements exist
     for (const [key, el] of Object.entries(setupEls)) {
@@ -95,5 +96,4 @@ document.addEventListener("DOMContentLoaded", async () => {
     const savedTheme = localStorage.getItem("ai-theme") || "green";
     setupEls.themeSelect.value = savedTheme;
     applyTheme(savedTheme);
-    
-});
+};
