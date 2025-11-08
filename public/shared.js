@@ -41,7 +41,7 @@ let READ_ONLY_COMMANDS = [
 
 // === Auth helper ===
 async function authCheck() {
-
+    authorized = false;  // default
     try {
         const res = await fetch(`${API_BASE}/auth_check`, {
             method: "POST",
@@ -50,20 +50,32 @@ async function authCheck() {
             credentials: "include"
         });
 
-        if (!res.ok) throw new Error("Auth failed");
-        const data = await res.json();
-        if (!data.ok) throw new Error("Auth denied");
+        // Network error or server failure
+        if (!res.ok) {
+            console.warn("[WEB] Auth check request failed with status:", res.status);
+            return false;
+        }
 
-        console.log("[WEB] Auth successful");
-        authorized = true
-        return true;
+        const data = await res.json();
+
+        // Server responded — now check the auth result
+        if (data.ok === true) {
+            console.log("[WEB] Authenticated");
+            authorized = true;
+            return true;
+        } else {
+            console.log("[WEB] Not authenticated");
+            authorized = false;
+            return false;
+        }
+
     } catch (err) {
-        console.error("[WEB] Auth error:", err);
+        // Only log REAL failures such as server offline, CORS issues, etc
+        console.error("[WEB] Auth check error:", err);
         authorized = false;
         return false;
     }
 }
-
 // === WebSocket setup ===
 function connectWebSocket(onMessageCallback) {
     ws = new WebSocket(WS_URL);
