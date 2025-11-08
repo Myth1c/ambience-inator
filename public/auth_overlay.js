@@ -54,22 +54,27 @@ const authOverlay = {
     async submit() {
         const key = this.modalInput.value.trim();
         if (!key) return alert("Enter the key.");
-
-        const res = await fetch("/auth_check", {
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({ key }),
-            credentials: "include"
-        });
-
-        const data = await res.json();
-
-        if (data.ok) {
-            // Success → collapse and remove flashing
-            localStorage.setItem("ai-auth-key", key);
-            this.minimize(false);
-        } else {
-            alert("Invalid key.");
+        
+        try{
+            const res = await fetch("https://ambienceinator-web.onrender.com/auth_check", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ key }),
+                credentials: "include"
+            });
+            
+            const data = await res.json();
+            
+            if (data.ok){
+                
+                this.minimize(false);
+            }else{
+                alert("Invalid auth key")
+            }
+            
+        } catch(err){
+            console.error("[AUTH] Error:", err);
+            alert("Unable to contact authentication server");
         }
     }
 };
