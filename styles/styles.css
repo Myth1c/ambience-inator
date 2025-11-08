@@ -749,6 +749,15 @@
   cursor: pointer;
   accent-color: var(--accent);
 }
+.playback-panel.disabled-panel {
+  opacity: 0.4;
+  filter: grayscale(50%);
+  pointer-events: none;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+  transition: opacity 0.2s ease, filter 0.2s ease;
+}
 
 @media (max-width: 750px) {
   .playback-panels {

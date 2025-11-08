@@ -891,6 +891,14 @@ $font-main: "Fira Mono", monospace;
     cursor: pointer;
     accent-color: $color-accent;
   }
+
+  &.disabled-panel {
+    opacity: 0.4;
+    filter: grayscale(50%);
+    pointer-events: none;
+    user-select: none;
+    transition: opacity 0.2s ease, filter 0.2s ease;
+  }
 }
 
 @media (max-width: 750px) {
