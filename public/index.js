@@ -77,17 +77,18 @@ function updateBotStatus(webOK) {
     botStatus = window.playbackState.bot_online;
 
     // Reset status lists
+    elBotStatus.classList.remove(
+        "status--ok",
+        "status--warn",
+        "status--err"
+    );
+    
     elWebStatus.classList.remove(
         "status--ok",
         "status--warn",
         "status--err"
     );
     
-    elBotStatus.classList.remove(
-        "status--ok",
-        "status--warn",
-        "status--err"
-    );
     
     // --- Webserver ---
     if(webOK){
