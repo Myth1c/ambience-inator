@@ -15,8 +15,8 @@ window.onload = async () => {
     const statusEl   = document.getElementById("setup-status");
 
     const themeSelect = document.getElementById("theme-select");
-    const previewInput = document.querySelector(".setup-theme__preview-input");
-    const previewBtn   = document.querySelector(".setup-theme__preview-btn");
+    const previewInput = document.querySelector("setup-theme__preview-input");
+    const previewBtn   = document.querySelector("setup-theme__preview-btn");
     const themeStatus  = document.getElementById("theme-status");
 
     if (!inputText || !inputVoice || !btnSave || !statusEl || !themeSelect) {
