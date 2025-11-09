@@ -123,6 +123,7 @@ window.onPlaybackStateUpdated = () => {
     updateToggleVisual("music-shuffle", window.playbackState.music.shuffle);
     updatePlaybackButtons(window.playbackState.music.playing, window.playbackState.ambience.playing);
     autoSelectCurrentPlaylist();
+    updatePlaybackAvailability(); 
 };
 
 window.onReturnPlaylists = (pls) => {
